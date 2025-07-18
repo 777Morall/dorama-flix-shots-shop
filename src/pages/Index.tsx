@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { MovieCard } from "@/components/MovieCard";
 import { MovieDetails } from "@/components/MovieDetails";
@@ -7,88 +9,56 @@ import { Badge } from "@/components/ui/badge";
 import { Film, Sparkles, TrendingUp } from "lucide-react";
 import cinemaHero from "@/assets/cinema-hero.jpg";
 
-// Mock data - será substituído pelo banco de dados
-const mockMovies = [
-  {
-    id: "1",
-    title: "Parasita",
-    description: "Uma família pobre se infiltra na vida de uma família rica, levando a consequências inesperadas e perturbadoras.",
-    genre: "Thriller",
-    year: 2019,
-    duration: "2h 12min",
-    rating: 8.6,
-    price: 10.00,
-    poster: "https://images.unsplash.com/photo-1489599735826-1dade2ac5b6c?w=300&h=450&fit=crop",
-    trailer: "https://youtube.com/watch?v=example"
-  },
-  {
-    id: "2",
-    title: "Descendentes do Sol",
-    description: "Um capitão das forças especiais e uma cirurgiã se apaixonam em meio a uma missão humanitária perigosa.",
-    genre: "Romance/Drama",
-    year: 2016,
-    duration: "16 episódios",
-    rating: 8.7,
-    price: 10.00,
-    poster: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=450&fit=crop"
-  },
-  {
-    id: "3",
-    title: "Oldboy",
-    description: "Um homem é aprisionado por 15 anos sem saber o motivo e, quando libertado, busca vingança contra seus captores.",
-    genre: "Ação/Thriller",
-    year: 2003,
-    duration: "2h 0min",
-    rating: 8.4,
-    price: 10.00,
-    poster: "https://images.unsplash.com/photo-1518930259200-7e2976ea3673?w=300&h=450&fit=crop"
-  },
-  {
-    id: "4",
-    title: "Crash Landing on You",
-    description: "Uma herdeira sul-coreana faz um pouso forçado na Coreia do Norte e se apaixona por um oficial do exército.",
-    genre: "Romance/Comédia",
-    year: 2019,
-    duration: "16 episódios",
-    rating: 8.8,
-    price: 10.00,
-    poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=450&fit=crop"
-  },
-  {
-    id: "5",
-    title: "Lula Molusco",
-    description: "Drama coreano sobre um jovem lutador que busca realizar seus sonhos no competitivo mundo dos esportes.",
-    genre: "Drama/Esporte",
-    year: 2021,
-    duration: "2h 5min",
-    rating: 8.2,
-    price: 10.00,
-    poster: "https://images.unsplash.com/photo-1489599735826-1dade2ac5b6c?w=300&h=450&fit=crop"
-  },
-  {
-    id: "6",
-    title: "Kingdom",
-    description: "Um príncipe investiga uma misteriosa praga que transforma pessoas em zumbis na Coreia do período Joseon.",
-    genre: "Horror/Drama",
-    year: 2019,
-    duration: "2 temporadas",
-    rating: 8.3,
-    price: 10.00,
-    poster: "https://images.unsplash.com/photo-1518930259200-7e2976ea3673?w=300&h=450&fit=crop"
-  }
-];
+interface Movie {
+  id: string;
+  title: string;
+  description: string;
+  genre: string;
+  year: number;
+  duration: string;
+  rating: number;
+  price: number;
+  poster: string;
+  trailer?: string;
+}
 
 const Index = () => {
-  const [selectedMovie, setSelectedMovie] = useState<any>(null);
+  const navigate = useNavigate();
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredMovies, setFilteredMovies] = useState(mockMovies);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadMovies();
+  }, []);
+
+  const loadMovies = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('movies')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      const moviesData = data || [];
+      setMovies(moviesData);
+      setFilteredMovies(moviesData);
+    } catch (error) {
+      console.error('Error loading movies:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim() === "") {
-      setFilteredMovies(mockMovies);
+      setFilteredMovies(movies);
     } else {
-      const filtered = mockMovies.filter(
+      const filtered = movies.filter(
         movie =>
           movie.title.toLowerCase().includes(query.toLowerCase()) ||
           movie.genre.toLowerCase().includes(query.toLowerCase()) ||
@@ -99,9 +69,19 @@ const Index = () => {
   };
 
   const handleLoginClick = () => {
-    // Implementar após conectar Supabase
-    alert("Sistema de login admin será implementado após conectar ao Supabase!");
+    navigate("/auth");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
+        <div className="text-center">
+          <Film className="h-16 w-16 text-primary mx-auto mb-4 animate-spin" />
+          <p className="text-lg">Carregando catálogo...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-hero">
