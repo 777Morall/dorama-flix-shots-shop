@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Film, LogIn, UserPlus } from "lucide-react";
+import { Play, LogIn, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 
 const Auth = () => {
@@ -84,9 +84,9 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Film className="h-8 w-8 text-primary" />
+            <Play className="h-8 w-8 text-primary" />
             <span className="text-2xl font-bold bg-gradient-accent bg-clip-text text-transparent">
-              CinemaFlix Admin
+              Shorts Dorama Shop
             </span>
           </div>
           <CardTitle>Acesso ao Sistema</CardTitle>
