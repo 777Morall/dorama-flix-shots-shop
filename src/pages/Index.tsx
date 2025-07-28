@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Play, Search, User, Star, Heart, Clock, Calendar, Sparkles, TrendingUp } from "lucide-react";
+import { Play, Search, User, Star, Heart, Clock, Calendar, Sparkles, TrendingUp, Volume2, VolumeX, Share2, MessageCircle, MoreVertical, Download } from "lucide-react";
 
 interface Dorama {
   id: string;
@@ -27,6 +27,7 @@ const Index = () => {
   const [filteredDoramas, setFilteredDoramas] = useState<Dorama[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     loadDoramas();
@@ -98,229 +99,264 @@ const Index = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <Play className="h-16 w-16 text-primary mx-auto mb-4 animate-pulse" />
-          <p className="text-lg">Carregando doramas...</p>
+          <Play className="h-16 w-16 text-white mx-auto mb-4 animate-pulse" />
+          <p className="text-lg text-white">Carregando shorts...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-hero">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="container mx-auto px-4 py-4">
+    <div className="min-h-screen bg-black text-white">
+      {/* Header Mobile-First */}
+      <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-gray-800">
+        <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <div className="relative">
-                <Play className="h-8 w-8 text-primary" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse" />
+                <Play className="h-6 w-6 text-pink-500" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-accent bg-clip-text text-transparent">
-                  Shorts Dorama Shop
-                </h1>
-                <p className="text-xs text-muted-foreground">Doramas e Filmes Asiáticos</p>
-              </div>
+              <h1 className="text-lg font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                Shorts
+              </h1>
             </div>
 
-            {/* Search */}
-            <div className="hidden md:flex items-center gap-4 flex-1 max-w-md mx-8">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            {/* Search Mobile */}
+            <div className="flex-1 max-w-xs mx-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Buscar doramas..."
-                  className="pl-10"
+                  placeholder="Buscar..."
+                  className="pl-10 bg-gray-900 border-gray-700 text-white placeholder-gray-400 rounded-full h-9"
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
                 />
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex items-center gap-4">
-              <Badge variant="outline" className="hidden sm:flex items-center gap-1">
-                <Star className="h-3 w-3 fill-accent text-accent" />
-                R$ 20,00/mês
-              </Badge>
-              
-              {user ? (
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => navigate("/planos")}>
-                    Planos
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => navigate("/admin")}>
-                    Admin
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={handleLogout}>
-                    Sair
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => navigate("/planos")}>
-                    Assinar
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={handleLoginClick}>
-                    <User className="h-4 w-4 mr-2" />
-                    Entrar
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile search */}
-          <div className="md:hidden mt-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Buscar doramas..."
-                className="pl-10"
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
-            </div>
+            {/* Profile */}
+            {user ? (
+              <div className="flex items-center gap-1">
+                <Button variant="ghost" size="sm" onClick={() => navigate("/admin")} className="text-gray-300 p-2">
+                  <MoreVertical className="h-5 w-5" />
+                </Button>
+              </div>
+            ) : (
+              <Button variant="ghost" size="sm" onClick={handleLoginClick} className="text-gray-300 p-2">
+                <User className="h-5 w-5" />
+              </Button>
+            )}
           </div>
         </div>
       </header>
+
+      {/* Navigation Tabs */}
+      <div className="sticky top-[60px] z-40 bg-black/80 backdrop-blur-sm border-b border-gray-800">
+        <div className="flex items-center justify-center gap-8 px-4 py-2">
+          <button className="text-white font-medium pb-2 border-b-2 border-white">
+            Para você
+          </button>
+          <button className="text-gray-400 font-medium pb-2">
+            Seguindo
+          </button>
+          <button className="text-gray-400 font-medium pb-2">
+            Populares
+          </button>
+        </div>
+      </div>
       
-      {/* Hero Section */}
-      <section className="relative h-96 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-hero" />
-        
-        <div className="absolute inset-0 flex items-center">
-          <div className="container mx-auto px-4">
-            <div className="max-w-2xl space-y-6">
-              <div className="flex items-center gap-2">
-                <Badge className="bg-gradient-accent text-accent-foreground">
-                  <Sparkles className="h-3 w-3 mr-1" />
-                  Premium
-                </Badge>
-                <Badge variant="outline">
-                  <Heart className="h-3 w-3 mr-1" />
-                  K-Dramas
-                </Badge>
-              </div>
-              
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-accent bg-clip-text text-transparent">
-                Doramas Asiáticos
-              </h1>
-              
-              <p className="text-xl text-muted-foreground">
-                Os melhores doramas coreanos, japoneses e chineses por apenas <span className="text-accent font-bold">R$ 20,00/mês</span>
-              </p>
-              
-              <div className="flex gap-4">
-                <Button size="lg" className="text-lg" onClick={() => navigate("/planos")}>
-                  <Play className="h-5 w-5 mr-2" />
-                  Começar Agora
-                </Button>
-                <Button variant="outline" size="lg" className="text-lg">
-                  <Heart className="h-5 w-5 mr-2" />
-                  Explorar Catálogo
-                </Button>
-              </div>
+      {/* Shorts Feed */}
+      <div className="pb-20">
+        {filteredDoramas.length === 0 ? (
+          <div className="flex items-center justify-center h-96">
+            <div className="text-center">
+              <Play className="h-16 w-16 text-gray-500 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2 text-white">Nenhum short encontrado</h3>
+              <p className="text-gray-400">Tente buscar por outro termo</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Doramas Grid */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">
-            {searchQuery ? `Resultados para "${searchQuery}"` : "Catálogo Completo"}
-          </h2>
-          <p className="text-muted-foreground">
-            {filteredDoramas.length} {filteredDoramas.length === 1 ? "dorama encontrado" : "doramas encontrados"}
-          </p>
-        </div>
-
-        {filteredDoramas.length === 0 ? (
-          <div className="text-center py-16">
-            <Play className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Nenhum dorama encontrado</h3>
-            <p className="text-muted-foreground">
-              Tente buscar por outro termo ou explore nosso catálogo completo
-            </p>
-          </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredDoramas.map((dorama) => (
-              <Card key={dorama.id} className="overflow-hidden hover:shadow-glow transition-all duration-300 cursor-pointer group"
-                    onClick={() => navigate(`/dorama/${dorama.id}`)}>
-                <div className="aspect-[2/3] relative">
+          <div className="space-y-1">
+            {filteredDoramas.map((dorama, index) => (
+              <div key={dorama.id} className="relative h-screen w-full bg-black">
+                {/* Video/Poster Background */}
+                <div className="absolute inset-0">
                   <img
                     src={dorama.poster}
                     alt={dorama.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-2 right-2">
-                    <Badge className="bg-gradient-accent text-accent-foreground">
-                      R$ {dorama.price.toFixed(2)}
-                    </Badge>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+                </div>
+
+                {/* Controls Overlay - Right Side */}
+                <div className="absolute right-4 bottom-20 flex flex-col items-center gap-6 z-10">
+                  {/* Like */}
+                  <div className="flex flex-col items-center">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-12 w-12 rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40"
+                    >
+                      <Heart className="h-6 w-6 text-white" />
+                    </Button>
+                    <span className="text-xs text-white mt-1">128k</span>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                    <div className="p-4 w-full">
-                      <Button size="sm" className="w-full">
-                        <Play className="h-4 w-4 mr-2" />
-                        Assistir
-                      </Button>
+
+                  {/* Comment */}
+                  <div className="flex flex-col items-center">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-12 w-12 rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40"
+                    >
+                      <MessageCircle className="h-6 w-6 text-white" />
+                    </Button>
+                    <span className="text-xs text-white mt-1">1.2k</span>
+                  </div>
+
+                  {/* Share */}
+                  <div className="flex flex-col items-center">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-12 w-12 rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40"
+                    >
+                      <Share2 className="h-6 w-6 text-white" />
+                    </Button>
+                    <span className="text-xs text-white mt-1">892</span>
+                  </div>
+
+                  {/* Download */}
+                  <div className="flex flex-col items-center">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-12 w-12 rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40"
+                      onClick={() => navigate(`/dorama/${dorama.id}`)}
+                    >
+                      <Download className="h-6 w-6 text-white" />
+                    </Button>
+                  </div>
+
+                  {/* Profile Avatar */}
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 p-0.5">
+                    <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
+                      <Play className="h-6 w-6 text-white" />
                     </div>
                   </div>
                 </div>
-                
-                <CardContent className="p-4">
-                  <h3 className="font-bold text-lg mb-2 line-clamp-1">{dorama.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                    {dorama.description}
-                  </p>
-                  
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      <span>{dorama.rating}</span>
+
+                {/* Content Info - Bottom Left */}
+                <div className="absolute bottom-20 left-4 right-20 z-10">
+                  <div className="space-y-3">
+                    {/* Creator */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-white font-semibold">@shortsDorama</span>
+                      <Button
+                        size="sm"
+                        className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-1 h-7 rounded-full"
+                        onClick={() => navigate("/planos")}
+                      >
+                        Seguir
+                      </Button>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>{dorama.year}</span>
+
+                    {/* Title & Description */}
+                    <div>
+                      <h2 className="text-white font-semibold text-lg mb-1 line-clamp-2">
+                        {dorama.title}
+                      </h2>
+                      <p className="text-white/90 text-sm line-clamp-2">
+                        {dorama.description}
+                      </p>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      <span>{dorama.duration}</span>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2">
+                      <span className="text-white/80 text-sm">#{dorama.genre.toLowerCase()}</span>
+                      <span className="text-white/80 text-sm">#dorama</span>
+                      <span className="text-white/80 text-sm">#shorts</span>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="flex items-center gap-4 text-white/70 text-sm">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span>{dorama.rating}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>{dorama.year}</span>
+                      </div>
+                      <Badge className="bg-pink-500/20 text-pink-300 border-pink-500/30 px-2 py-0.5 text-xs">
+                        R$ {dorama.price.toFixed(2)}
+                      </Badge>
                     </div>
                   </div>
-                  
-                  <div className="mt-2">
-                    <Badge variant="secondary" className="text-xs">
-                      {dorama.genre}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+
+                {/* Audio Control */}
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="absolute bottom-32 right-4 h-10 w-10 rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40"
+                  onClick={() => setMuted(!muted)}
+                >
+                  {muted ? (
+                    <VolumeX className="h-5 w-5 text-white" />
+                  ) : (
+                    <Volume2 className="h-5 w-5 text-white" />
+                  )}
+                </Button>
+
+                {/* Progress Bar */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
+                  <div className="h-full bg-white w-3/4 transition-all duration-1000" />
+                </div>
+              </div>
             ))}
           </div>
         )}
-      </section>
+      </div>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card/50 py-8 mt-16">
-        <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Play className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold bg-gradient-accent bg-clip-text text-transparent">
-              Shorts Dorama Shop
-            </span>
-          </div>
-          <p className="text-muted-foreground text-sm">
-            © 2024 Shorts Dorama Shop. Todos os direitos reservados. • Doramas e Filmes Asiáticos
-          </p>
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-md border-t border-gray-800 z-50">
+        <div className="flex items-center justify-around py-2">
+          <Button variant="ghost" className="flex flex-col items-center gap-1 text-white p-2">
+            <Play className="h-5 w-5" />
+            <span className="text-xs">Início</span>
+          </Button>
+          <Button variant="ghost" className="flex flex-col items-center gap-1 text-gray-400 p-2">
+            <Search className="h-5 w-5" />
+            <span className="text-xs">Descobrir</span>
+          </Button>
+          <Button 
+            variant="ghost" 
+            className="flex flex-col items-center gap-1 text-gray-400 p-2"
+            onClick={() => navigate("/planos")}
+          >
+            <Sparkles className="h-5 w-5" />
+            <span className="text-xs">Premium</span>
+          </Button>
+          <Button variant="ghost" className="flex flex-col items-center gap-1 text-gray-400 p-2">
+            <Heart className="h-5 w-5" />
+            <span className="text-xs">Curtidas</span>
+          </Button>
+          <Button 
+            variant="ghost" 
+            className="flex flex-col items-center gap-1 text-gray-400 p-2"
+            onClick={user ? handleLogout : handleLoginClick}
+          >
+            <User className="h-5 w-5" />
+            <span className="text-xs">Perfil</span>
+          </Button>
         </div>
-      </footer>
+      </div>
     </div>
   );
 };
