@@ -1,34 +1,34 @@
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Film, Search, User, Star } from "lucide-react";
+import { Film, Search, Star } from "lucide-react";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
-  onLoginClick: () => void;
 }
 
-export function Header({ onSearch, onLoginClick }: HeaderProps) {
+export function Header({ onSearch }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <Film className="h-8 w-8 text-primary" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse" />
+      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+        <div className="flex items-center justify-between gap-3">
+          {/* Logo - Compacto no mobile */}
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="relative flex-shrink-0">
+              <Film className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+              <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-2 h-2 sm:w-3 sm:h-3 bg-accent rounded-full animate-pulse" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-accent bg-clip-text text-transparent">
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-2xl font-bold bg-gradient-accent bg-clip-text text-transparent truncate">
                 CinemaFlix
               </h1>
-              <p className="text-xs text-muted-foreground">Filmes e Doramas</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">
+                Filmes e Doramas
+              </p>
             </div>
           </div>
 
-          {/* Search */}
-          <div className="hidden md:flex items-center gap-4 flex-1 max-w-md mx-8">
+          {/* Search Desktop */}
+          <div className="hidden lg:flex items-center gap-4 flex-1 max-w-md mx-8">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -39,27 +39,23 @@ export function Header({ onSearch, onLoginClick }: HeaderProps) {
             </div>
           </div>
 
-          {/* Price info & Login */}
-          <div className="flex items-center gap-4">
-            <Badge variant="outline" className="hidden sm:flex items-center gap-1">
-              <Star className="h-3 w-3 fill-accent text-accent" />
-              A partir de R$ 10,00
+          {/* Price Badge */}
+          <div className="flex items-center">
+            <Badge variant="outline" className="flex items-center gap-1 text-xs px-2 py-1">
+              <Star className="h-3 w-3 fill-accent text-accent flex-shrink-0" />
+              <span className="hidden sm:inline">A partir de</span>
+              <span className="font-medium">R$ 10</span>
             </Badge>
-            
-            <Button variant="outline" size="sm" onClick={onLoginClick}>
-              <User className="h-4 w-4 mr-2" />
-              Admin
-            </Button>
           </div>
         </div>
 
-        {/* Mobile search */}
-        <div className="md:hidden mt-4">
+        {/* Search Mobile/Tablet */}
+        <div className="lg:hidden mt-3 sm:mt-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Buscar filmes e doramas..."
-              className="pl-10"
+              className="pl-10 h-10 sm:h-11"
               onChange={(e) => onSearch(e.target.value)}
             />
           </div>
